@@ -1,5 +1,11 @@
 #include <iostream>
-#include <stdio.h>
+#include <cstdio>
+#include <stdlib.h>
+#include <time.h>
+#include <float.h>
+#include  <regex>
+
+
 
 
 void PrintMenu() {
@@ -15,14 +21,44 @@ void PrintMenu() {
 
 int GetVariant(int count) {
     int variant;
-    char line[100];
-    scanf("%s", line);
+    char VariantLine[100];
+    scanf("%s", VariantLine);
 
-    while (sscanf(line, "%d", &variant) != 1 || variant < 1 || variant > 5) {
-        printf("Incorrect input. Try again: "); // выводим сообщение об ошибке
-       //scanf("%s", line);
+    while (scanf(VariantLine, "%d", &variant) != 1 || variant < 1 || variant > 5) {
+        printf("Incorrect input. Try again: ");
+        scanf("%s", VariantLine);
     }
     return variant;
+}
+
+bool IsNumeric(std::string const &number) {
+    return std::regex_match(number, std::regex("[(-|+)|][0-9]+"));
+}
+
+double GetMin() {
+    double min;
+    std::string minStr;
+
+        std::cout << "Input min value (through.)" << std::endl;
+        std::cin >> minStr;
+        while (IsNumeric(minStr) == false) {
+            std::cout << "Input min value again" << std::endl;
+                std::cin >> minStr;
+            if (IsNumeric(minStr) == true) {
+                break;
+            };
+        };
+        std::string::size_type sz;
+        min = std::stod(minStr, &sz);
+    return min;
+}
+double GetMax() {
+    double max;
+
+    std::cin >> max;
+
+    return max;
+
 }
 
 int main() {
@@ -31,6 +67,11 @@ int main() {
 
     using namespace std;
 
+    double min;
+    min = GetMin();
+
+
+    cout << "Min = " << min;
     int variant;
     do {
         PrintMenu();
@@ -54,3 +95,4 @@ int main() {
 
     return 0;
 }
+

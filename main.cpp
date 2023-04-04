@@ -1,15 +1,13 @@
 #include <iostream>
-#include <cstdio>
-#include <stdlib.h>
-#include <time.h>
-#include <float.h>
-#include  <regex>
-
+#include <conio.h>
+#include <cstdlib>
+#include <ctime>
+#include <limits>
+#include <cmath>
 
 
 
 void PrintMenu() {
-
     std::cout << "+--------------------------+" << std::endl;
     std::cout << "|1. Sort  3 random elements|" << std::endl;
     std::cout << "|2. Sort  4 random elements|" << std::endl;
@@ -19,80 +17,142 @@ void PrintMenu() {
     std::cout << "+--------------------------+" << std::endl;
 }
 
-int GetVariant(int count) {
+int GetVariant(int number) {
     int variant;
-    char VariantLine[100];
-    scanf("%s", VariantLine);
 
-    while (scanf(VariantLine, "%d", &variant) != 1 || variant < 1 || variant > 5) {
+    std::cin >> variant;
+    while (variant < 1 || variant > 5) {
         printf("Incorrect input. Try again: ");
-        scanf("%s", VariantLine);
+        std::cin >> variant;
     }
     return variant;
 }
 
-bool IsNumeric(std::string const &number) {
-    return std::regex_match(number, std::regex("[(-|+)|][0-9]+"));
+int GetNumber() {
+    int number;
+    std::cout << "Input value" << std::endl;
+    std::cin >> number;
+
+    while(std::cin.fail()) {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<int>::max(), '\n');
+
+
+        std::cout << "Input failed. Input value again" << std::endl;
+        std::cin >> number;
+    }
+    return number;
 }
 
-double GetMin() {
-    double min;
-    std::string minStr;
+//int CheakNumber(int firstNumber, int secondNumber) {
+//    if (firstNumber > secondNumber)
+//         std::swap(firstNumber, secondNumber);
+//    return firstNumber;
+//    return secondNumber;
+//}
 
-        std::cout << "Input min value (through.)" << std::endl;
-        std::cin >> minStr;
-        while (IsNumeric(minStr) == false) {
-            std::cout << "Input min value again" << std::endl;
-                std::cin >> minStr;
-            if (IsNumeric(minStr) == true) {
-                break;
-            };
-        };
-        std::string::size_type sz;
-        min = std::stod(minStr, &sz);
-    return min;
+
+
+int GetRandomNumber(int min, int  max) {
+    return min + rand() % (max - min + 1);
 }
-double GetMax() {
-    double max;
 
-    std::cin >> max;
+void PrintArray(int array[], int size) {
+    for (size_t i = 0; i < size; ++i) {
+        std::cout << array[i] << ' ';
+    }
+    std::cout << std::endl;
+}
 
-    return max;
+int SortArray(int array[], int sizeArray) {
+    int middleArray;
+    for (int idx_i = 0; idx_i < sizeArray; ++idx_i) {
+        for (int idx_j = 0; idx_j < sizeArray - 1 - idx_i; ++idx_j) {
+            if (array[idx_j + 1] < array[idx_j]) {
+                std::swap(array[idx_j], array[idx_j + 1]);
+            }
+        }
+    }
+    PrintArray(array, sizeArray);
+}
 
+int MiddleArray(int sizeArray, int middleArray) {
+    double doubleSizeArray = sizeArray;
+    if (sizeArray % 2 ==0)
+        return middleArray = sizeArray / 2 + 1;
+    else if (sizeArray % 2 != 0) {
+        return middleArray = round(doubleSizeArray / 2);
+    }
 }
 
 int main() {
-    system("cls");
-    system("color 5");
-
     using namespace std;
+    //system("color 5");
 
-    double min;
-    min = GetMin();
+    int min;
+    int max;
 
-
-    cout << "Min = " << min;
     int variant;
     do {
         PrintMenu();
 
         variant = GetVariant(5);
         switch (variant) {
-            case 1:
-                cout << "| 1, 2, 3                  |" << std::endl;
-                break;
-            case 2:
-                cout << "| 1, 2, 3, 4               |" << std::endl;
-                break;
-            case 3:
-                cout << "| 1, 2, 3, 4, 5            |" << std::endl;
-                break;
+            case 1: {
+                min = GetNumber();
+                max = GetNumber();
+                //CheakNumber(min, max);
+                cout << "Min = " << min << "Max = " << max;
 
+                int const sizeArray = 3;
+                int array[sizeArray];
+
+                srand(static_cast<int> (time(NULL)));
+                for (int i = 0; i < sizeArray; ++i) {
+                    array[i] = GetRandomNumber(min, max);
+                }
+                cout << "Unsorted array:" << endl;
+                PrintArray(array, sizeArray);
+                cout << endl;
+
+                cout << "Sorted array:" << endl;
+                SortArray(array, sizeArray);
+                break;
+            }
+            case 2: {
+                min = GetNumber();
+                max = GetNumber();
+
+                int const sizeArray = 4;
+                int array[sizeArray];
+
+                srand(static_cast<int> (time(NULL)));
+                for (int i = 0; i < sizeArray; ++i) {
+                    array[i] = GetRandomNumber(min, max);
+                }
+                PrintArray(array, sizeArray);
+                cout << endl;
+                break;
+            }
+            case 3: {
+                min = GetNumber();
+                max = GetNumber();
+
+                int const sizeArray = 5;
+                int array[sizeArray];
+
+                srand(static_cast<int> (time(NULL)));
+                for (int i = 0; i < sizeArray; ++i) {
+                    array[i] = GetRandomNumber(min, max);
+                }
+                PrintArray(array, sizeArray);
+                cout << endl;
+                break;
+            }
         }
-        if (variant == 5)
-            system("pause");
-    } while (variant != 5);
+//        if (variant == 5)
+//            system("pause");
+    }while (variant != 5);
 
-    return 0;
+        return 0;
 }
-

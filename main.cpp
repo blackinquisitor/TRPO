@@ -44,12 +44,11 @@ int GetNumber() {
     return number;
 }
 
-//int CheakNumber(int firstNumber, int secondNumber) {
-//    if (firstNumber > secondNumber)
-//         std::swap(firstNumber, secondNumber);
-//    return firstNumber;
-//    return secondNumber;
-//}
+int CheckNumber(int* firstNumber, int* secondNumber) {
+    if (*firstNumber > *secondNumber)
+        std::swap(*firstNumber, *secondNumber);
+    return *firstNumber, *secondNumber;
+}
 
 
 
@@ -64,95 +63,113 @@ void PrintArray(int array[], int size) {
     std::cout << std::endl;
 }
 
-int SortArray(int array[], int sizeArray) {
-    int middleArray;
+int FirstSortingArray(int array[], int sizeArray) {
     for (int idx_i = 0; idx_i < sizeArray; ++idx_i) {
         for (int idx_j = 0; idx_j < sizeArray - 1 - idx_i; ++idx_j) {
-            if (array[idx_j + 1] < array[idx_j]) {
+            if (array[idx_j + 1] < array[idx_j])
                 std::swap(array[idx_j], array[idx_j + 1]);
+        }
+    }
+    PrintArray(array, sizeArray);
+}
+
+int MiddleArray(int sizeArray) {
+    double doubleSizeArray = sizeArray;
+    if (sizeArray % 2 ==0)
+        return  sizeArray / 2 + 1;
+    else if (sizeArray % 2 != 0) {
+        return round(doubleSizeArray / 2);
+    }
+}
+
+int SecondSortingArray(int array[], int sizeArray) {
+    for (int idx_i = 0; idx_i < sizeArray; ++idx_i) {
+        for (int idx_j = 0; idx_j < MiddleArray(sizeArray); ++idx_j) {
+            if (array[idx_j + 1] < array[idx_j])
+                std::swap(array[idx_j], array[idx_j + 1]);
+            if (idx_i == 1) {
+                if (array[1] > array[idx_j])
+                    std::swap(array[idx_j], array[idx_j + 1]);
             }
         }
     }
     PrintArray(array, sizeArray);
 }
 
-int MiddleArray(int sizeArray, int middleArray) {
-    double doubleSizeArray = sizeArray;
-    if (sizeArray % 2 ==0)
-        return middleArray = sizeArray / 2 + 1;
-    else if (sizeArray % 2 != 0) {
-        return middleArray = round(doubleSizeArray / 2);
-    }
-}
-
 int main() {
-    using namespace std;
-    //system("color 5");
+        using namespace std;
+        //system("color 5");
 
-    int min;
-    int max;
+        int *min = new int;
+        int *max = new int;
 
-    int variant;
-    do {
-        PrintMenu();
+        int variant;
+        do {
+            PrintMenu();
 
-        variant = GetVariant(5);
-        switch (variant) {
-            case 1: {
-                min = GetNumber();
-                max = GetNumber();
-                //CheakNumber(min, max);
-                cout << "Min = " << min << "Max = " << max;
+            variant = GetVariant(5);
+            switch (variant) {
+                case 1: {
+                    *min = GetNumber();
+                    *max = GetNumber();
 
-                int const sizeArray = 3;
-                int array[sizeArray];
+                    int const sizeArray = 3;
+                    int array[sizeArray];
 
-                srand(static_cast<int> (time(NULL)));
-                for (int i = 0; i < sizeArray; ++i) {
-                    array[i] = GetRandomNumber(min, max);
+                    srand(static_cast<int> (time(NULL)));
+                    for (int i = 0; i < sizeArray; ++i) {
+                        array[i] = GetRandomNumber(*min, *max);
+                    }
+                    cout << "Unsorted array:" << endl;
+                    PrintArray(array, sizeArray);
+                    cout << endl;
+
+                    cout << "Sorted array:" << endl;
+                    FirstSortingArray(array, sizeArray);
+                    break;
                 }
-                cout << "Unsorted array:" << endl;
-                PrintArray(array, sizeArray);
-                cout << endl;
+                case 2: {
+                    *min = GetNumber();
+                    *max = GetNumber();
 
-                cout << "Sorted array:" << endl;
-                SortArray(array, sizeArray);
-                break;
-            }
-            case 2: {
-                min = GetNumber();
-                max = GetNumber();
+                    int const sizeArray = 4;
+                    int array[sizeArray] ;
 
-                int const sizeArray = 4;
-                int array[sizeArray];
+                    srand(static_cast<int> (time(NULL)));
+                    for (int i = 0; i < sizeArray; ++i) {
+                        array[i] = GetRandomNumber(*min, *max);
+                    }
+                    cout << "Unsorted array:" << endl;
+                    PrintArray(array, sizeArray);
+                    cout << endl;
 
-                srand(static_cast<int> (time(NULL)));
-                for (int i = 0; i < sizeArray; ++i) {
-                    array[i] = GetRandomNumber(min, max);
+                    cout << "Sorted array:" << endl;
+                    SecondSortingArray(array, sizeArray);
+                    break;
                 }
-                PrintArray(array, sizeArray);
-                cout << endl;
-                break;
-            }
-            case 3: {
-                min = GetNumber();
-                max = GetNumber();
+                case 3: {
+                    *min = GetNumber();
+                    *max = GetNumber();
 
-                int const sizeArray = 5;
-                int array[sizeArray];
+                    int const sizeArray = 5;
+                    int array[sizeArray];
 
-                srand(static_cast<int> (time(NULL)));
-                for (int i = 0; i < sizeArray; ++i) {
-                    array[i] = GetRandomNumber(min, max);
+                    srand(static_cast<int> (time(NULL)));
+                    for (int i = 0; i < sizeArray; ++i) {
+                        array[i] = GetRandomNumber(*min, *max);
+                    }
+                    cout << "Unsorted array:" << endl;
+                    PrintArray(array, sizeArray);
+                    cout << endl;
+
+                    cout << "Sorted array:" << endl;
+//                SortArray(array, sizeArray);
+                    break;
                 }
-                PrintArray(array, sizeArray);
-                cout << endl;
-                break;
             }
-        }
 //        if (variant == 5)
 //            system("pause");
-    }while (variant != 5);
+        } while (variant != 5);
 
         return 0;
 }

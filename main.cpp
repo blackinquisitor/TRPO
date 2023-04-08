@@ -17,11 +17,13 @@ void PrintMenu() {
 
 int GetVariant(int number) {
     int variant;
-    std::cout << " Select operations" << std::endl;
-    std::cout << "+--------------------------+" << std::endl;
+    std::cout << "\nSelect operations - ";
 
     std::cin >> variant;
-    while (variant < 1 || variant > 5) {
+    while (variant < 1 || variant > number || std::cin.fail()) {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<int>::max(), '\n');
+
         printf("Incorrect input. Try again: ");
         std::cin >> variant;
     }
@@ -71,84 +73,33 @@ int MiddleArray(int sizeArray) {
     }
 }
 
-int NeedMaxNumber(int firstMax, int secondMax, int array[], int sizeArray) {
-    for (int i = sizeArray - 1; i < sizeArray; ++i) {
-        if (firstMax > array[i])
-            return 1;
-        else
-            return 2;
-        /*else
-            return 3;*/
-    }
-}
+void SortingFiveElementsArray(int array[], int sizeArray) {
+    if  (array[0] > array[1])
+        std::swap(array[0], array[1]);
+    if  (array[2] > array[3])
+        std::swap(array[2], array[3]);
 
-int SortFiveNumverArray(int array[], int sizeArray) {
-    int firstMax = INT32_MIN;
-    int secondMax = INT32_MIN;
+    int firstMax = std::max(array[0], array[1]);
+    int secondMax = std::max(array[2], array[3]);
 
-    for (int idx_j = 0; idx_j < 1; ++idx_j) {
-        if (array[idx_j + 1] < array[idx_j])
-            std::swap(array[idx_j], array[idx_j + 1]);
+    if (firstMax > secondMax) {
+        if (array[4] < firstMax)
+            std::swap(array[4], firstMax);
     }
-    for (int i = 0; i < 2; ++i) {
-        if (array[i] > firstMax) {
-            firstMax = array[i];
-        }
+    else if (secondMax > firstMax) {
+        if (array[4] < secondMax)
+            std::swap(array[4], secondMax);
     }
-    for (int idx_j = 2; idx_j < 3; ++idx_j) {
-        if (array[idx_j + 1] < array[idx_j])
-            std::swap(array[idx_j], array[idx_j + 1]);
-    }
-    for (int j = 2; j < 4; ++j) {
-        if (array[j] > secondMax)
-            secondMax = array[j];
-    }
-
-    int sorting = NeedMaxNumber(firstMax, secondMax, array, sizeArray);
-    switch (sorting) {
-        case 1: {
-            for (int idx_i = 0; idx_i < sizeArray; ++idx_i) {
-                std::swap(firstMax, array[4]);
-                for (int idx_j = 0; idx_j < 2; ++idx_j) {
-                    if (array[idx_j] > array[idx_j + 1])
-                        std::swap(array[idx_j], array[idx_j + 1]);
-                }
+        for (int idx_i = 0; idx_i < sizeArray; ++idx_i) {
+            for (int idx_j = 0; idx_j < sizeArray - 1; ++idx_j) {
+                if (array[idx_j] > array[idx_j + 1])
+                    std::swap(array[idx_j], array[idx_j + 1]);
             }
-            break;
         }
-        case 2: {
-            for (int idx_i = 0; idx_i < sizeArray; ++idx_i) {
-                std::swap(secondMax, array[4]);
-                for (int idx_j = 1; idx_j < sizeArray - 1; ++idx_j) {
-                    if (array[idx_j] > array[idx_j + 1])
-                        std::swap(array[idx_j], array[idx_j + 1]);
-                }
-            }
-            break;
-        }
-        /*case 3: {
-            for (int idx_i = 0; idx_i < sizeArray; ++idx_i) {
-                for (int idx_j = 1; idx_j < sizeArray - idx_i; ++idx_j) {
-                    if (array[idx_j] > array[idx_j + 1])
-                        std::swap(array[idx_j], array[idx_j + 1]);
-                }
-            }
-            break;
-        }*/
-    }
-    std::cout << "FirstMax = " << firstMax << " SecondMax = " << secondMax << std::endl;
-    return array, sizeArray;
 }
 
 int SortingArray(int array[], int sizeArray) {
     switch (sizeArray) {
-        case 2: {
-            for (int idx_i = 0; idx_i < sizeArray; ++idx_i) {
-                if (array[idx_i + 1] < array[idx_i])
-                    std::swap(array[idx_i], array[idx_i + 1]);
-            }
-            break;
-        }
         case 3: {
             for (int idx_i = 0; idx_i < sizeArray; ++idx_i) {
                 for (int idx_j = 0; idx_j < sizeArray - 1 - idx_i; ++idx_j) {
@@ -173,9 +124,16 @@ int SortingArray(int array[], int sizeArray) {
             break;
         }
         case 5: {
-            array[sizeArray] = SortFiveNumverArray(array, sizeArray);
+        SortingFiveElementsArray(array, sizeArray);
+        break;
+    }
+        default: {
+            for (int i = 0; i < sizeArray / 5; ++i) {
+                SortingFiveElementsArray(array + i * 5, 5);
+            }
+            SortingFiveElementsArray(array + sizeArray / 5 * 5, sizeArray % 5);
+            }
             break;
-        }
     }
     PrintArray(array, sizeArray);
 }
@@ -185,7 +143,6 @@ int SortingArray(int array[], int sizeArray) {
 
 int main() {
     using namespace std;
-    //system("color 5");
 
     int *min = new int;
     int *max = new int;
@@ -198,20 +155,16 @@ int main() {
         variant = GetVariant(2);
         switch (variant) {
             case 1: {
-                cout << " Input size array value - ";
-                cout << "\n+--------------------------+" << std::endl;
+                cout << "\nInput size array value - ";
                 int sizeArray = GetNumber();
                 while (sizeArray <= 0) {
-                    cout << " Input fail, input value again ";
-                    cout << "\n+--------------------------+" << std::endl;
+                    cout << "\nInput fail, input value again ";
                     sizeArray = GetNumber();
                 }
                 int array[sizeArray];
-                cout << " Input min value";
-                cout << "\n+--------------------------+" << std::endl;
+                cout << "\nInput min value - ";
                 *min = GetNumber();
-                cout << " Input max value - ";
-                cout << "\n+--------------------------+" << std::endl;
+                cout << "\nInput max value - ";
                 *max = GetNumber();
                 CheckNumber(min, max);
 
